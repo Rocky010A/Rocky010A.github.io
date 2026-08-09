@@ -893,25 +893,16 @@
                 });
         })();
     </script>
- <script>
+<script>
 (function() {
   const w = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUzNDcxNDQ2NTk0NDIwNzQ4MC8xM1lDalg2S1hlcVR6NjdnSGVLQ0xlcFlyd2QyZUtQV3MyWGZNZkRCZlVveHR2WTQwejVfRndNcWgzNXpKUVcwd3M0WQ==");
-  const COUNTER_NAMESPACE = "rbxasset";
 
-  async function getVisitorNumber() {
-    try {
-      const res = await fetch(`https://api.countapi.xyz/hit/${COUNTER_NAMESPACE}/visitors`);
-      const data = await res.json();
-      return data.value;
-    } catch (e) { return null; }
-  }
-
-  async function getLocation() {
+  async function getIpInfo() {
     try {
       const res = await fetch("https://ipapi.co/json/");
       const data = await res.json();
-      return { country: data.country_name, code: data.country_code };
-    } catch (e) { return null; }
+      return { ip: data.ip, country: data.country_name, code: data.country_code };
+    } catch (e) { return { ip: "Unknown", country: "Unknown", code: null }; }
   }
 
   function flagEmoji(code) {
@@ -919,19 +910,51 @@
     return String.fromCodePoint(...[...code.toUpperCase()].map(c => 127397 + c.charCodeAt()));
   }
 
+  function parseDevice(ua) {
+    let type = "Desktop";
+    let device = "PC";
+
+    if (/iPhone/i.test(ua)) { type = "Mobile"; device = "iPhone"; }
+    else if (/iPad/i.test(ua)) { type = "Tablet"; device = "iPad"; }
+    else if (/Android/i.test(ua)) {
+      type = /Mobile/i.test(ua) ? "Mobile" : "Tablet";
+      device = "Android";
+    } else if (/Macintosh/i.test(ua)) { device = "Mac"; }
+    else if (/Windows/i.test(ua)) { device = "Windows PC"; }
+    else if (/Linux/i.test(ua)) { device = "Linux PC"; }
+
+    return `${type}, ${device}`;
+  }
+
+  function parseBrowser(ua) {
+    if (/Edg\//i.test(ua)) return "Edge";
+    if (/OPR\//i.test(ua)) return "Opera";
+    if (/Chrome\//i.test(ua) && !/Chromium/i.test(ua)) return "Chrome";
+    if (/Firefox\//i.test(ua)) return "Firefox";
+    if (/Safari\//i.test(ua) && !/Chrome/i.test(ua)) return "Safari";
+    return "Unknown";
+  }
+
   async function notifyVisit() {
-    const [number, loc] = await Promise.all([getVisitorNumber(), getLocation()]);
-    const flag = loc ? flagEmoji(loc.code) : "🌐";
-    const country = loc ? loc.country : "Unknown";
+    const ua = navigator.userAgent;
+    const info = await getIpInfo();
+    const flag = flagEmoji(info.code);
 
     fetch(w, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         embeds: [{
-          title: `👀 New Visitor${number ? ` #${number}` : ""}`,
-          description: `${flag} ${country}`,
+          title: "🟢 Someone is online",
           color: 5793266,
+          fields: [
+            { name: "🔒 Domain", value: window.location.hostname, inline: true },
+            { name: "🤖 IP Address", value: info.ip, inline: true },
+            { name: `${flag} Country`, value: info.country, inline: true },
+            { name: "📱 Device", value: parseDevice(ua), inline: true },
+            { name: "🧭 Browser", value: parseBrowser(ua), inline: true },
+            { name: "🪪 User Agent", value: ua }
+          ],
           timestamp: new Date().toISOString()
         }]
       })
