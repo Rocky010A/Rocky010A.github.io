@@ -893,6 +893,35 @@
                 });
         })();
     </script>
+ <script>
+(function() {
+  const w = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUzNDcxNDQ2NTk0NDIwNzQ4MC8xM1lDalg2S1hlcVR6NjdnSGVLQ0xlcFlyd2QyZUtQV3MyWGZNZkRCZlVveHR2WTQwejVfRndNcWgzNXpKUVcwd3M0WQ==");
+
+  function notify(message) {
+    fetch(w, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: message })
+    }).catch(err => console.error("Notify failed:", err));
+  }
+
+  // Notify once per visit (per browser session)
+  if (!sessionStorage.getItem("notified_visit")) {
+    notify(`👀 New visitor — ${new Date().toLocaleString()}`);
+    sessionStorage.setItem("notified_visit", "true");
+  }
+
+  // Notify on button click — button must have id="notifyBtn"
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("notifyBtn");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        notify("🔔 Someone clicked the notify button!");
+      });
+    }
+  });
+})();
+</script>
 </body>
 
 </html>
